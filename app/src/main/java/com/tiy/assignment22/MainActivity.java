@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button sendButton;
     ArrayAdapter<String> items;
     ChatClient myChatClient;
+    int sendCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         list = (ListView)findViewById(R.id.listView);
         text = (EditText) findViewById(R.id.editText);
         sendButton = (Button) findViewById(R.id.button);
+
+        text.setHint("Enter your name");
 
         items = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         list.setAdapter(items);
@@ -48,7 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String item = text.getText().toString();
         items.add(item);
         text.setText("");
-        myChatClient.sendMessage(item);
+        text.setHint("Write a message!");
+        myChatClient.sendMessage(item, sendCount);
+        sendCount++;
     }
 
     @Override

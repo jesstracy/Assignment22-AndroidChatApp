@@ -25,9 +25,14 @@ public class ChatClient {
             ex.printStackTrace();
         }
     }
-    public void sendMessage(String message) {
-        // send message here!
-        out.println(message);
+    public void sendMessage(String message, int sendCount) {
+        // if it's the first message, the user is sending his/her name
+        if (sendCount == 0) {
+            String nameMessage = "name=" + message;
+            out.println(nameMessage);
+        } else {
+            out.println(message);
+        }
     }
 
 }
