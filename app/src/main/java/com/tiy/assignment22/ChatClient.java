@@ -28,17 +28,6 @@ public class ChatClient {
         }
     }
 
-//    public ArrayList<String> sendMessage(String message, int sendCount) {
-//        // if it's the first message, the user is sending his/her name
-//        if (sendCount == 0) {
-//            String nameMessage = "name=" + message;
-//            out.println(nameMessage);
-//        } else {
-//            out.println(message);
-//        }
-//        ArrayList<String> serverResponse = getServerResponse();
-//        return serverResponse;
-//    }
 
     public String sendMessage(String message, int sendCount) {
         // if it's the first message, the user is sending his/her name
@@ -65,21 +54,6 @@ public class ChatClient {
         }
         return historyStrings;
     }
-
-//    public ArrayList<String> getServerResponse() {
-//        ArrayList<String> serverResponses = new ArrayList<String>();
-//        String singleResponse;
-//        try {
-//            while ((singleResponse = in.readLine()) != null) {
-//                System.out.println("how many times");
-//                serverResponses.add(singleResponse);
-//                System.out.println("Onxe");
-//            }
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
-//        return serverResponses;
-//    }
 
     public String getServerResponse() {
         String serverResponse = "";
