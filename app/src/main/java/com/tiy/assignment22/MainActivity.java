@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView list;
     EditText text;
     Button sendButton;
+    Button historyButton;
+    Button exitButton;
     ArrayAdapter<String> items;
     ChatClient myChatClient;
     int sendCount = 0;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         list = (ListView)findViewById(R.id.listView);
         text = (EditText) findViewById(R.id.editText);
         sendButton = (Button) findViewById(R.id.button);
+        historyButton = (Button) findViewById(R.id.button2);
+        exitButton = (Button) findViewById(R.id.button3);
 
         text.setHint("Enter your name");
 
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         list.setAdapter(items);
 
         sendButton.setOnClickListener(this);
+
+
         list.setOnItemLongClickListener(this);
 //        text.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //            @Override
@@ -57,11 +63,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        });
 
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sendCount != 0 && sendCount != 1) {
+                    items.add("history");
+                    ArrayList<String> historyStrings = myChatClient.sendHistoryMessage();
+                    for (String response : historyStrings) {
+                        items.add("\t\t*" + userName + "'s History* " + response);
+                    }
+                } else {
+                    items.add("No history to show!");
+                }
+            }
+        });
+
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                items.add("exit");
+                String serverResponse = myChatClient.sendMessage("exit", sendCount);
+                items.add("\t\t*Server Response* " + serverResponse);
+            }
+        });
+
 
         myChatClient = new ChatClient();
         myChatClient.startClientSocket();
     }
 
+    // onClickListener for first button is doing this one bc we said the listener was "this" for first button (??)
     @Override
     public void onClick(View v) {
         enterAMessage();
@@ -74,16 +105,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         items.add(item);
         text.setText("");
-        text.setHint("Write a message, \"history\", or \"exit\"");
-        if (!item.equals("history")) {
+        text.setHint("Write a message");
+//        if (!item.equals("history")) {
             String serverResponse = myChatClient.sendMessage(item, sendCount);
             items.add("\t\t*Server Response* " + serverResponse);
-        } else {
-            ArrayList<String> historyStrings = myChatClient.sendHistoryMessage();
-            for (String response : historyStrings) {
-                items.add("\t\t*" + userName + "'s History* " + response);
-            }
-        }
+//        } else {
+//            ArrayList<String> historyStrings = myChatClient.sendHistoryMessage();
+//            for (String response : historyStrings) {
+//                items.add("\t\t*" + userName + "'s History* " + response);
+//            }
+//        }
 
         sendCount++;
     }
