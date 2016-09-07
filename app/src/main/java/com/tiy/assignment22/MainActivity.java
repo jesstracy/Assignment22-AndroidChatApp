@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener {
 
     ListView list;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayAdapter<String> items;
     ChatClient myChatClient;
     int sendCount = 0;
+    String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -49,11 +53,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         String item = text.getText().toString();
+        if (sendCount == 0) {
+            userName = item;
+        }
         items.add(item);
         text.setText("");
         text.setHint("Write a message!");
-        myChatClient.sendMessage(item, sendCount);
+//        ArrayList<String> serverResponses = myChatClient.sendMessage(item, sendCount);
+        if (!item.equals("history")) {
+            String serverResponse = myChatClient.sendMessage(item, sendCount);
+            items.add("\t\t*Server Response* " + serverResponse);
+        } else {
+            ArrayList<String> historyStrings = myChatClient.sendHistoryMessage();
+            for (String response : historyStrings) {
+                items.add("\t\t*" + userName + "'s History* " + response);
+            }
+        }
+
+//        for (String response : serverResponses) {
+//            items.add("*Server Response*" + response);
+//        }
+
         sendCount++;
+
+//        if (item.equals("history")) {
+//            try {
+//                String responseFromServer;
+//                while ((responseFromServer = myChatClient.getIn().readLine()) != null) {
+//                    myChatClient.addResponse(responseFromServer);
+//                }
+//
+//                // *** Now printing responses from server ***
+//                if (responseFromServer != null) {
+//                    for (String string : myChatClient.getServerResponses()) {
+//                        items.add(string);
+//                    }
+//                }
+//            } catch (IOException ex) {
+//                System.out.println("Exception caught when reading in from server.");
+//                ex.printStackTrace();
+//            }
+//        }
     }
 
     @Override

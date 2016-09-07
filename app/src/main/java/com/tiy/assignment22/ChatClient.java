@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Created by jessicatracy on 9/7/16.
@@ -12,6 +13,7 @@ import java.net.Socket;
 public class ChatClient {
     private PrintWriter out;
     private BufferedReader in;
+//    private ArrayList<String> serverResponses = new ArrayList<String>();
 
     public void startClientSocket() {
         try {
@@ -25,7 +27,20 @@ public class ChatClient {
             ex.printStackTrace();
         }
     }
-    public void sendMessage(String message, int sendCount) {
+
+//    public ArrayList<String> sendMessage(String message, int sendCount) {
+//        // if it's the first message, the user is sending his/her name
+//        if (sendCount == 0) {
+//            String nameMessage = "name=" + message;
+//            out.println(nameMessage);
+//        } else {
+//            out.println(message);
+//        }
+//        ArrayList<String> serverResponse = getServerResponse();
+//        return serverResponse;
+//    }
+
+    public String sendMessage(String message, int sendCount) {
         // if it's the first message, the user is sending his/her name
         if (sendCount == 0) {
             String nameMessage = "name=" + message;
@@ -33,6 +48,75 @@ public class ChatClient {
         } else {
             out.println(message);
         }
+        String serverResponse = getServerResponse();
+        return serverResponse;
     }
 
+    public ArrayList<String> sendHistoryMessage() {
+        ArrayList<String> historyStrings = new ArrayList<>();
+        try {
+            out.println("history");
+            String currentLine;
+            while (!(currentLine = in.readLine()).equals("TX::HISTORY::END")) {
+                historyStrings.add(currentLine);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return historyStrings;
+    }
+
+//    public ArrayList<String> getServerResponse() {
+//        ArrayList<String> serverResponses = new ArrayList<String>();
+//        String singleResponse;
+//        try {
+//            while ((singleResponse = in.readLine()) != null) {
+//                System.out.println("how many times");
+//                serverResponses.add(singleResponse);
+//                System.out.println("Onxe");
+//            }
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//        return serverResponses;
+//    }
+
+    public String getServerResponse() {
+        String serverResponse = "";
+        try {
+        serverResponse = in.readLine();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return serverResponse;
+    }
+
+    //getters and setters
+//    public ArrayList<String> getServerResponses() {
+//        return serverResponses;
+//    }
+//
+//    public void setServerResponses(ArrayList<String> serverResponses) {
+//        this.serverResponses = serverResponses;
+//    }
+//
+//    public void addResponse(String response) {
+//        serverResponses.add(response);
+//    }
+
+    public PrintWriter getOut() {
+        return out;
+    }
+
+    public void setOut(PrintWriter out) {
+        this.out = out;
+    }
+
+    public BufferedReader getIn() {
+        return in;
+    }
+
+    public void setIn(BufferedReader in) {
+        this.in = in;
+    }
 }
